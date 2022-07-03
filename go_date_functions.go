@@ -4,6 +4,15 @@ import (
 	"time"
 )
 
+// AddMinutes Add the specified number of minutes to the given date
+func AddMinutes(dirtyDate time.Time, amount int) time.Time {
+	if amount == 0 {
+		// If 0 days, no-op to avoid changing times in the hour before end of DST
+		return dirtyDate.Add(0)
+	}
+	return dirtyDate.Add(time.Minute * time.Duration(amount))
+}
+
 //AddHours Add the specified number of hours to the given date.
 func AddHours(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
