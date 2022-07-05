@@ -7,7 +7,7 @@ import (
 // AddMilliseconds Add the specified number of Milliseconds to the given date
 func AddMilliseconds(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
-		// If 0 days, no-op to avoid changing times in the hour before end of DST
+		// If amount == 0, no-op
 		return dirtyDate.Add(0)
 	}
 	return dirtyDate.Add(time.Millisecond * time.Duration(amount))
@@ -16,7 +16,7 @@ func AddMilliseconds(dirtyDate time.Time, amount int) time.Time {
 // AddMinutes Add the specified number of minutes to the given date
 func AddMinutes(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
-		// If 0 days, no-op to avoid changing times in the hour before end of DST
+		// If amount == 0, no-op
 		return dirtyDate.Add(0)
 	}
 	return dirtyDate.Add(time.Minute * time.Duration(amount))
@@ -25,7 +25,7 @@ func AddMinutes(dirtyDate time.Time, amount int) time.Time {
 //AddHours Add the specified number of hours to the given date.
 func AddHours(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
-		// If 0 days, no-op to avoid changing times in the hour before end of DST
+		// If amount == 0, no-op
 		return dirtyDate.Add(0)
 	}
 	return dirtyDate.Add(time.Hour * time.Duration(amount))
@@ -34,7 +34,7 @@ func AddHours(dirtyDate time.Time, amount int) time.Time {
 // AddDays Add the specified number of days to the given date.
 func AddDays(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
-		// If 0 days, no-op to avoid changing times in the hour before end of DST
+		// If amount == 0, no-op
 		return dirtyDate.Add(0)
 	}
 	return dirtyDate.Add((time.Hour * 24) * time.Duration(amount))
