@@ -1,7 +1,6 @@
 package go_date_functions
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -45,13 +44,6 @@ func TestAddDays(t *testing.T) {
 
 }
 
-func ExampleAddDays() {
-	exampleDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	exampleDatePlus1Day := AddDays(exampleDate, 1)
-	fmt.Printf("testDate= %v", exampleDate)
-	fmt.Printf("exampleDatePlus1Day= %v", exampleDatePlus1Day)
-}
-
 func TestAddBusinessDays(t *testing.T) {
 
 	tests := []testCase{
@@ -73,13 +65,6 @@ func TestAddBusinessDays(t *testing.T) {
 			}
 		})
 	}
-}
-
-func ExampleAddBusinessDays() {
-	exampleDate := time.Date(2022, 6, 19, 0, 0, 0, 0, time.UTC)
-	exampleDatePlus1Day := AddBusinessDays(exampleDate, 1)
-	fmt.Printf("testDate= %v", exampleDate)
-	fmt.Printf("exampleDatePlus1Day= %v", exampleDatePlus1Day)
 }
 
 func TestAddHours(t *testing.T) {
@@ -111,13 +96,6 @@ func TestAddHours(t *testing.T) {
 
 }
 
-func ExampleAddHours() {
-	exampleDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	exampleDatePlus1Hour := AddHours(exampleDate, 1)
-	fmt.Printf("testDate= %v", exampleDate)
-	fmt.Printf("exampleDatePlus1hour= %v", exampleDatePlus1Hour)
-}
-
 func TestAddMinutes(t *testing.T) {
 	var tests []testCase
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
@@ -144,13 +122,6 @@ func TestAddMinutes(t *testing.T) {
 			t.Errorf("AddMinutes() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
-}
-
-func ExampleAddMinutes() {
-	exampleDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	exampleDatePlus1minute := AddMinutes(exampleDate, 1)
-	fmt.Printf("testDate= %v", exampleDate)
-	fmt.Printf("exampleDatePlus1minute= %v", exampleDatePlus1minute)
 }
 
 func TestAddMilliseconds(t *testing.T) {
@@ -181,9 +152,36 @@ func TestAddMilliseconds(t *testing.T) {
 	})
 }
 
-func ExampleAddMilliseconds() {
-	exampleDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	var exampleDatePlus1Millisecond time.Time = AddMilliseconds(exampleDate, 1000)
-	fmt.Printf("testDate= %v", exampleDate)
-	fmt.Printf("exampleDatePlus1Millisecond= %v", exampleDatePlus1Millisecond)
+func TestAddMonths(t *testing.T) {
+	var tests []testCase
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	tests = append(tests, testCase{
+		"adds the given number of Months",
+		args{dirtyDate: testDate, amount: 1},
+		time.Date(1991, 10, 26, 0, 0, 0, 0, time.UTC),
+	}, testCase{
+		"subtract the given number of Months",
+		args{dirtyDate: time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC), amount: -1},
+		time.Date(1991, 8, 26, 0, 0, 0, 0, time.UTC),
+	},
+		testCase{
+			"adds the given number of Months (February)",
+			args{dirtyDate: time.Date(2022, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1},
+			time.Date(2022, 2, 28, 0, 0, 0, 0, time.UTC),
+		},
+	)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := AddMonths(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("AddMonths() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	t.Run("does not mutate original date", func(t *testing.T) {
+		if got := AddHours(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddMonths() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
 }

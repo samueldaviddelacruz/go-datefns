@@ -37,7 +37,7 @@ func AddDays(dirtyDate time.Time, amount int) time.Time {
 		// If amount == 0, no-op
 		return dirtyDate.Add(0)
 	}
-	return dirtyDate.Add((time.Hour * 24) * time.Duration(amount))
+	return dirtyDate.AddDate(0, 0, amount)
 }
 
 // AddBusinessDays Add the specified number of business days (mon - fri) to the given date, ignoring weekends.
@@ -70,4 +70,30 @@ func subtractBusinessDays(dirtyDate time.Time, amount int) time.Time {
 		date = AddDays(date, -1)
 	}
 	return date
+}
+
+//AddMonths Add the specified number of months to the given date.
+func AddMonths(dirtyDate time.Time, amount int) time.Time {
+	if amount == 0 {
+		// If amount == 0, no-op
+		return dirtyDate.Add(0)
+	}
+	zeroEdDate := time.Date(dirtyDate.Year(), dirtyDate.Month(), 1, 0, 0, 0, 0, time.UTC)
+	endingMonth := time.Date(dirtyDate.Year(), zeroEdDate.Month()+time.Month(amount), 1, 0, 0, 0, 0, time.UTC)
+	daysEndingMonthDays := countDays(endingMonth)
+	if dirtyDate.Day() > daysEndingMonthDays {
+		return time.Date(endingMonth.Year(), endingMonth.Month(), daysEndingMonthDays, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), time.UTC)
+	}
+	return dirtyDate.AddDate(0, amount, 0)
+}
+
+func countDays(date time.Time) int {
+	count := 0
+	zeroEdDate := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC)
+	nextMonth := time.Date(date.Year(), zeroEdDate.Month()+1, 1, 0, 0, 0, 0, time.UTC)
+	for zeroEdDate.Before(nextMonth) {
+		count = count + 1
+		zeroEdDate = zeroEdDate.AddDate(0, 0, 1)
+	}
+	return count
 }
