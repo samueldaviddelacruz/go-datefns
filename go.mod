@@ -1,3 +1,3 @@
-module go-date-functions
+module github.com/samueldaviddelacruz/go-datefns
 
-go 1.16
+go 1.24.3

@@ -1,4 +1,4 @@
-package go_date_functions
+package datefns
 
 import (
 	"reflect"
@@ -56,6 +56,11 @@ func TestAddBusinessDays(t *testing.T) {
 			"subtract the given number of business days",
 			args{dirtyDate: time.Date(2022, 6, 19, 0, 0, 0, 0, time.UTC), amount: -1},
 			time.Date(2022, 6, 17, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			"start on Saturday and add 1 business day",
+			args{dirtyDate: time.Date(2023, 7, 1, 0, 0, 0, 0, time.UTC), amount: 1},
+			time.Date(2023, 7, 3, 0, 0, 0, 0, time.UTC), // Monday
 		},
 	}
 	for _, tt := range tests {
@@ -118,7 +123,7 @@ func TestAddMinutes(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddHours(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+		if got := AddMinutes(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
 			t.Errorf("AddMinutes() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
@@ -146,7 +151,7 @@ func TestAddMilliseconds(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddHours(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+		if got := AddMilliseconds(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
 			t.Errorf("AddMilliseconds() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
@@ -169,6 +174,11 @@ func TestAddMonths(t *testing.T) {
 			args{dirtyDate: time.Date(2022, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1},
 			time.Date(2022, 2, 28, 0, 0, 0, 0, time.UTC),
 		},
+		testCase{
+			"adds month from Jan 31 to leap Feb",
+			args{dirtyDate: time.Date(2020, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1},
+			time.Date(2020, 2, 29, 0, 0, 0, 0, time.UTC),
+		},
 	)
 
 	for _, tt := range tests {
@@ -180,7 +190,7 @@ func TestAddMonths(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddHours(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+		if got := AddMonths(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
 			t.Errorf("AddMonths() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})

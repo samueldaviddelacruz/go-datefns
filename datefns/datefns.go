@@ -1,4 +1,4 @@
-package go_date_functions
+package datefns
 
 import (
 	"time"
@@ -22,7 +22,7 @@ func AddMinutes(dirtyDate time.Time, amount int) time.Time {
 	return dirtyDate.Add(time.Minute * time.Duration(amount))
 }
 
-//AddHours Add the specified number of hours to the given date.
+// AddHours Add the specified number of hours to the given date.
 func AddHours(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
 		// If amount == 0, no-op
@@ -46,54 +46,42 @@ func AddBusinessDays(dirtyDate time.Time, amount int) time.Time {
 		return subtractBusinessDays(dirtyDate, amount*-1)
 	}
 	date := AddDays(dirtyDate, 0)
-	for i := 1; i <= amount; i++ {
-		if AddDays(date, 1).Weekday() == time.Saturday {
-			date = AddDays(date, 2)
-		}
-		if AddDays(date, 1).Weekday() == time.Sunday {
-			date = AddDays(date, 1)
-		}
+	for i := 0; i < amount; {
 		date = AddDays(date, 1)
+		if date.Weekday() != time.Saturday && date.Weekday() != time.Sunday {
+			i++
+		}
 	}
 	return date
 }
 
 func subtractBusinessDays(dirtyDate time.Time, amount int) time.Time {
 	date := AddDays(dirtyDate, 0)
-	for i := 1; i <= amount; i++ {
-		if AddDays(date, -1).Weekday() == time.Sunday {
-			date = AddDays(date, -2)
-		}
-		if AddDays(date, -1).Weekday() == time.Saturday {
-			date = AddDays(date, -1)
-		}
+	for i := 1; i <= amount; {
 		date = AddDays(date, -1)
+		if date.Weekday() != time.Saturday && date.Weekday() != time.Sunday {
+			i++
+		}
 	}
 	return date
 }
 
-//AddMonths Add the specified number of months to the given date.
+func daysInMonth(year int, month time.Month) int {
+	return time.Date(year, month+1, 0, 0, 0, 0, 0, time.UTC).Day()
+}
+
+// AddMonths Add the specified number of months to the given date.
 func AddMonths(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
 		// If amount == 0, no-op
 		return dirtyDate.Add(0)
 	}
-	zeroEdDate := time.Date(dirtyDate.Year(), dirtyDate.Month(), 1, 0, 0, 0, 0, time.UTC)
-	endingMonth := time.Date(dirtyDate.Year(), zeroEdDate.Month()+time.Month(amount), 1, 0, 0, 0, 0, time.UTC)
-	daysEndingMonthDays := countDays(endingMonth)
-	if dirtyDate.Day() > daysEndingMonthDays {
-		return time.Date(endingMonth.Year(), endingMonth.Month(), daysEndingMonthDays, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), time.UTC)
-	}
-	return dirtyDate.AddDate(0, amount, 0)
-}
+	year, month := dirtyDate.Year(), dirtyDate.Month()
+	targetMonth := month + time.Month(amount)
+	targetDate := time.Date(year, targetMonth, 1, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), dirtyDate.Location())
 
-func countDays(date time.Time) int {
-	count := 0
-	zeroEdDate := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC)
-	nextMonth := time.Date(date.Year(), zeroEdDate.Month()+1, 1, 0, 0, 0, 0, time.UTC)
-	for zeroEdDate.Before(nextMonth) {
-		count = count + 1
-		zeroEdDate = zeroEdDate.AddDate(0, 0, 1)
-	}
-	return count
+	daysInTargetMonth := daysInMonth(targetDate.Year(), targetDate.Month())
+	day := min(dirtyDate.Day(), daysInTargetMonth)
+
+	return time.Date(targetDate.Year(), targetDate.Month(), day, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), dirtyDate.Location())
 }
