@@ -85,3 +85,8 @@ func AddMonths(dirtyDate time.Time, amount int) time.Time {
 
 	return time.Date(targetDate.Year(), targetDate.Month(), day, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), dirtyDate.Location())
 }
+
+// IsWeekend Does the given date fall on a weekend? A weekend is either Saturday or Sunday
+func IsWeekend(dirtyDate time.Time) bool {
+	return dirtyDate.Weekday() == time.Saturday || dirtyDate.Weekday() == time.Sunday
+}
