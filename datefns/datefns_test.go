@@ -7,36 +7,30 @@ import (
 	"time"
 )
 
-type addAmountArg struct {
-	dirtyDate time.Time
-	amount    int
-}
-type datesDifArg struct {
-	laterDate   time.Time
-	earlierDate time.Time
-}
-type testCase[wantT any, argsT any] struct {
-	name string
-	args argsT
-	want wantT
-}
-
 func TestAddDays(t *testing.T) {
 
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	tests := []testCase[time.Time, addAmountArg]{{
-		"adds the given number of days",
-		addAmountArg{dirtyDate: testDate, amount: 1},
-		time.Date(1991, 9, 27, 0, 0, 0, 0, time.UTC),
-	}, {
-		"subtract the given number of days",
-		addAmountArg{dirtyDate: testDate, amount: -1},
-		time.Date(1991, 9, 25, 0, 0, 0, 0, time.UTC),
-	}}
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
+		{
+			name:      "adds the given number of days",
+			dirtyDate: testDate, amount: 1,
+			want: time.Date(1991, 9, 27, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:      "subtract the given number of days",
+			dirtyDate: testDate, amount: -1,
+			want: time.Date(1991, 9, 25, 0, 0, 0, 0, time.UTC),
+		},
+	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddDays(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := AddDays(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddDays() = %v, want %v", got, tt.want)
 			}
 		})
@@ -51,26 +45,32 @@ func TestAddDays(t *testing.T) {
 
 func TestAddBusinessDays(t *testing.T) {
 
-	tests := []testCase[time.Time, addAmountArg]{
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
 		{
-			"adds the given number of business days",
-			addAmountArg{dirtyDate: time.Date(2022, 6, 19, 0, 0, 0, 0, time.UTC), amount: 10},
-			time.Date(2022, 7, 1, 0, 0, 0, 0, time.UTC),
+			name:      "adds the given number of business days",
+			dirtyDate: time.Date(2022, 6, 19, 0, 0, 0, 0, time.UTC), amount: 10,
+			want: time.Date(2022, 7, 1, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			"subtract the given number of business days",
-			addAmountArg{dirtyDate: time.Date(2022, 6, 19, 0, 0, 0, 0, time.UTC), amount: -1},
-			time.Date(2022, 6, 17, 0, 0, 0, 0, time.UTC),
+			name:      "subtract the given number of business days",
+			dirtyDate: time.Date(2022, 6, 19, 0, 0, 0, 0, time.UTC), amount: -1,
+			want: time.Date(2022, 6, 17, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			"start on Saturday and add 1 business day",
-			addAmountArg{dirtyDate: time.Date(2023, 7, 1, 0, 0, 0, 0, time.UTC), amount: 1},
-			time.Date(2023, 7, 3, 0, 0, 0, 0, time.UTC), // Monday
+			name:      "start on Saturday and add 1 business day",
+			dirtyDate: time.Date(2023, 7, 1, 0, 0, 0, 0, time.UTC), amount: 1,
+			want: time.Date(2023, 7, 3, 0, 0, 0, 0, time.UTC), // Monday
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddBusinessDays(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := AddBusinessDays(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddBusinessDays() = %v, want %v", got, tt.want)
 			}
 		})
@@ -80,21 +80,26 @@ func TestAddBusinessDays(t *testing.T) {
 func TestAddHours(t *testing.T) {
 
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	tests := []testCase[time.Time, addAmountArg]{
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
 		{
-			"adds the given number of hours",
-			addAmountArg{dirtyDate: testDate, amount: 1},
-			time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC),
+			name:      "adds the given number of hours",
+			dirtyDate: testDate, amount: 1,
+			want: time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC),
 		}, {
-			"subtract the given number of hours",
-			addAmountArg{dirtyDate: time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC), amount: -1},
-			time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC),
+			name:      "subtract the given number of hours",
+			dirtyDate: time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC), amount: -1,
+			want: time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddHours(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := AddHours(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddHours() = %v, want %v", got, tt.want)
 			}
 		})
@@ -111,19 +116,27 @@ func TestAddHours(t *testing.T) {
 func TestAddMinutes(t *testing.T) {
 
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	tests := []testCase[time.Time, addAmountArg]{{
-		"adds the given number of minutes",
-		addAmountArg{dirtyDate: testDate, amount: 1},
-		time.Date(1991, 9, 26, 0, 1, 0, 0, time.UTC),
-	}, {
-		"subtract the given number of minutes",
-		addAmountArg{dirtyDate: time.Date(1991, 9, 26, 0, 1, 0, 0, time.UTC), amount: -1},
-		time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC),
-	}}
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
+		{
+			name:      "adds the given number of minutes",
+			dirtyDate: testDate, amount: 1,
+			want: time.Date(1991, 9, 26, 0, 1, 0, 0, time.UTC),
+		},
+		{
+			name:      "subtract the given number of minutes",
+			dirtyDate: time.Date(1991, 9, 26, 0, 1, 0, 0, time.UTC), amount: -1,
+			want: time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC),
+		},
+	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddMinutes(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := AddMinutes(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddMinutes() = %v, want %v", got, tt.want)
 			}
 		})
@@ -137,21 +150,27 @@ func TestAddMinutes(t *testing.T) {
 }
 
 func TestAddMilliseconds(t *testing.T) {
-
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	tests := []testCase[time.Time, addAmountArg]{{
-		"adds the given number of milliseconds",
-		addAmountArg{dirtyDate: testDate, amount: 1000},
-		time.Date(1991, 9, 26, 0, 0, 1, 0, time.UTC),
-	}, {
-		"subtract the given number of milliseconds",
-		addAmountArg{dirtyDate: time.Date(1991, 9, 26, 0, 0, 1, 0, time.UTC), amount: -1000},
-		time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC),
-	}}
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
+		{
+			name:      "adds the given number of milliseconds",
+			dirtyDate: testDate, amount: 1000,
+			want: time.Date(1991, 9, 26, 0, 0, 1, 0, time.UTC),
+		}, {
+			name:      "subtract the given number of milliseconds",
+			dirtyDate: time.Date(1991, 9, 26, 0, 0, 1, 0, time.UTC), amount: -1000,
+			want: time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC),
+		},
+	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddMilliseconds(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := AddMilliseconds(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddMilliseconds() = %v, want %v", got, tt.want)
 			}
 		})
@@ -167,31 +186,36 @@ func TestAddMilliseconds(t *testing.T) {
 func TestAddMonths(t *testing.T) {
 
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
-	tests := []testCase[time.Time, addAmountArg]{
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
 		{
-			"adds the given number of Months",
-			addAmountArg{dirtyDate: testDate, amount: 1},
-			time.Date(1991, 10, 26, 0, 0, 0, 0, time.UTC),
+			name:      "adds the given number of Months",
+			dirtyDate: testDate, amount: 1,
+			want: time.Date(1991, 10, 26, 0, 0, 0, 0, time.UTC),
 		}, {
-			"subtract the given number of Months",
-			addAmountArg{dirtyDate: time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC), amount: -1},
-			time.Date(1991, 8, 26, 0, 0, 0, 0, time.UTC),
+			name:      "subtract the given number of Months",
+			dirtyDate: time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC), amount: -1,
+			want: time.Date(1991, 8, 26, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			"adds the given number of Months (February)",
-			addAmountArg{dirtyDate: time.Date(2022, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1},
-			time.Date(2022, 2, 28, 0, 0, 0, 0, time.UTC),
+			name:      "adds the given number of Months (February)",
+			dirtyDate: time.Date(2022, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1,
+			want: time.Date(2022, 2, 28, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			"adds month from Jan 31 to leap Feb",
-			addAmountArg{dirtyDate: time.Date(2020, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1},
-			time.Date(2020, 2, 29, 0, 0, 0, 0, time.UTC),
+			name:      "adds month from Jan 31 to leap Feb",
+			dirtyDate: time.Date(2020, 1, 31, 0, 0, 0, 0, time.UTC), amount: 1,
+			want: time.Date(2020, 2, 29, 0, 0, 0, 0, time.UTC),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AddMonths(tt.args.dirtyDate, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := AddMonths(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddMonths() = %v, want %v", got, tt.want)
 			}
 		})
@@ -205,7 +229,11 @@ func TestAddMonths(t *testing.T) {
 }
 
 func TestIsWeekend(t *testing.T) {
-	tests := []testCase[bool, time.Time]{
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		want      bool
+	}{
 		{
 			"returns true if the given date is in a weekend",
 			time.Date(2014, 10, 5, 0, 0, 0, 0, time.UTC),
@@ -217,9 +245,10 @@ func TestIsWeekend(t *testing.T) {
 			false,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsWeekend(tt.args); got != tt.want {
+			if got := IsWeekend(tt.dirtyDate); got != tt.want {
 				t.Errorf("IsWeekend() = %v, want %v", got, tt.want)
 			}
 		})
@@ -227,26 +256,35 @@ func TestIsWeekend(t *testing.T) {
 }
 
 func TestDifferenceInCalendarDays(t *testing.T) {
-	tests := []testCase[int, datesDifArg]{
+	tests := []struct {
+		name    string
+		later   time.Time
+		earlier time.Time
+		want    int
+	}{
 		{
-			"returns the number of full days between the given dates",
-			datesDifArg{laterDate: time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC), earlierDate: time.Date(2011, 7, 2, 6, 0, 0, 0, time.UTC)},
-			366,
+			name:    "returns the number of full days between the given dates",
+			later:   time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC),
+			earlier: time.Date(2011, 7, 2, 6, 0, 0, 0, time.UTC),
+			want:    366,
 		},
 		{
-			"returns no full days between the given dates",
-			datesDifArg{laterDate: time.Date(2024, 7, 6, 5, 0, 0, 0, time.UTC), earlierDate: time.Date(2024, 7, 6, 4, 59, 0, 0, time.UTC)},
-			0,
+			name:    "returns no full days between the given dates",
+			later:   time.Date(2024, 7, 6, 5, 0, 0, 0, time.UTC),
+			earlier: time.Date(2024, 7, 6, 4, 59, 0, 0, time.UTC),
+			want:    0,
 		},
 		{
-			"returns the number of full days between the given dates in negative",
-			datesDifArg{earlierDate: time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC), laterDate: time.Date(2011, 7, 2, 6, 0, 0, 0, time.UTC)},
-			-366,
+			name:    "returns the number of full days between the given dates in negative",
+			later:   time.Date(2011, 7, 2, 6, 0, 0, 0, time.UTC),
+			earlier: time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC),
+			want:    -366,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := DifferenceInCalendarDays(tt.args.laterDate, tt.args.earlierDate); got != tt.want {
+			if got := DifferenceInCalendarDays(tt.later, tt.earlier); got != tt.want {
 				t.Errorf("DifferenceInDays() = %v, want %v", got, tt.want)
 			}
 		})
