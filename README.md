@@ -74,7 +74,7 @@ import (
 )
 
 func main() {
-	now := time.Date(2024, 7, 6, 10, 0, 0, 0, time.UTC)
+	now := time.Now()
 
 	nextWeek := datefns.AddDays(now, 7)
 	fmt.Println("Next week:", nextWeek)
