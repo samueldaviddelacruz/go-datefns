@@ -389,3 +389,29 @@ func TestStartOfDay(t *testing.T) {
 		})
 	}
 }
+
+func TestEndOfDay(t *testing.T) {
+	tests := []struct {
+		name string
+		date time.Time
+		want time.Time
+	}{
+		{
+			"returns the date with the time set to 00:00:00",
+			time.Date(2024, 7, 5, 12, 0, 0, 0, time.UTC),
+			time.Date(2024, 7, 5, 23, 59, 59, 999, time.UTC),
+		},
+		{
+			"keeps the original time zone",
+			time.Date(2024, 7, 5, 23, 7, 8, 5, time.FixedZone("EST", -5*3600)),
+			time.Date(2024, 7, 5, 23, 59, 59, 999, time.FixedZone("EST", -5*3600)),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EndOfDay(tt.date); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EndOfDay() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
