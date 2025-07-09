@@ -140,3 +140,8 @@ func DifferenceInDaysWithRounding(laterDate, earlierDate time.Time, method Round
 		return diff
 	}
 }
+
+// StartOfDay Return the start of a day for the given date.
+func StartOfDay(date time.Time) time.Time {
+	return time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
+}

@@ -363,3 +363,29 @@ func TestDifferenceInDaysWithRounding(t *testing.T) {
 		})
 	}
 }
+
+func TestStartOfDay(t *testing.T) {
+	tests := []struct {
+		name string
+		date time.Time
+		want time.Time
+	}{
+		{
+			"returns the date with the time set to 00:00:00",
+			time.Date(2024, 7, 5, 12, 0, 0, 0, time.UTC),
+			time.Date(2024, 7, 5, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			"keeps the original time zone",
+			time.Date(2024, 7, 5, 23, 59, 59, 123456789, time.FixedZone("EST", -5*3600)),
+			time.Date(2024, 7, 5, 0, 0, 0, 0, time.FixedZone("EST", -5*3600)),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := StartOfDay(tt.date); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StartOfDay() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
