@@ -418,12 +418,12 @@ func TestEndOfDay(t *testing.T) {
 		{
 			"returns the date with the time set to 00:00:00",
 			time.Date(2024, 7, 5, 12, 0, 0, 0, time.UTC),
-			time.Date(2024, 7, 5, 23, 59, 59, 999, time.UTC),
+			time.Date(2024, 7, 5, 23, 59, 59, 999_999_999, time.UTC),
 		},
 		{
 			"keeps the original time zone",
 			time.Date(2024, 7, 5, 23, 7, 8, 5, time.FixedZone("EST", -5*3600)),
-			time.Date(2024, 7, 5, 23, 59, 59, 999, time.FixedZone("EST", -5*3600)),
+			time.Date(2024, 7, 5, 23, 59, 59, 999_999_999, time.FixedZone("EST", -5*3600)),
 		},
 	}
 	for _, tt := range tests {
@@ -473,4 +473,44 @@ func TestStartOfMonth(t *testing.T) {
 			t.Errorf("StartOfMonth(testDate) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
+}
+
+func TestEndOfMonth(t *testing.T) {
+	tests := []struct {
+		name string
+		date time.Time
+		want time.Time
+	}{
+		{
+			"returns the date with the time set to 23:59:59.999 and the date set to the last day of a month",
+			time.Date(2024, 7, 5, 12, 0, 0, 0, time.UTC),
+			time.Date(2024, 7, 31, 23, 59, 59, 999_999_999, time.UTC),
+		},
+		{
+			"February leap year",
+			time.Date(2024, 2, 10, 15, 0, 0, 0, time.UTC),
+			time.Date(2024, 2, 29, 23, 59, 59, 999_999_999, time.UTC),
+		},
+		{
+			"keeps the original time zone",
+			time.Date(2024, 7, 5, 23, 59, 59, 123456789, time.FixedZone("EST", -5*3600)),
+			time.Date(2024, 7, 31, 23, 59, 59, 999_999_999, time.FixedZone("EST", -5*3600)),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EndOfMonth(tt.date); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EndOfMonth() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	t.Run("does not mutate original date", func(t *testing.T) {
+		EndOfMonth(testDate)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("EndOfMonth(testDate) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
+
 }

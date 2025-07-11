@@ -148,10 +148,17 @@ func StartOfDay(date time.Time) time.Time {
 
 // EndOfDay Return the end of a day for the given date.
 func EndOfDay(date time.Time) time.Time {
-	return time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999, date.Location())
+	return time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999_999_999, date.Location())
 }
 
 // StartOfMonth start of a month for the given date.
 func StartOfMonth(date time.Time) time.Time {
 	return time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, date.Location())
+}
+
+// EndOfMonth end of a month for the given date.
+func EndOfMonth(date time.Time) time.Time {
+	result := AddMonths(StartOfMonth(date), 1)
+	result = AddDays(result, -1)
+	return EndOfDay(result)
 }
