@@ -150,3 +150,8 @@ func StartOfDay(date time.Time) time.Time {
 func EndOfDay(date time.Time) time.Time {
 	return time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999, date.Location())
 }
+
+// StartOfMonth start of a month for the given date.
+func StartOfMonth(date time.Time) time.Time {
+	return time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, date.Location())
+}

@@ -35,9 +35,11 @@ func TestAddDays(t *testing.T) {
 			}
 		})
 	}
+
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddDays(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
-			t.Errorf("AddDays() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		AddDays(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddDays(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
 
@@ -75,6 +77,13 @@ func TestAddBusinessDays(t *testing.T) {
 			}
 		})
 	}
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	t.Run("does not mutate original date", func(t *testing.T) {
+		AddBusinessDays(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddBusinessDays(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
 }
 
 func TestAddHours(t *testing.T) {
@@ -106,11 +115,11 @@ func TestAddHours(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddHours(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
-			t.Errorf("AddHours() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		AddHours(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddHours(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
-
 }
 
 func TestAddMinutes(t *testing.T) {
@@ -143,8 +152,9 @@ func TestAddMinutes(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddMinutes(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
-			t.Errorf("AddMinutes() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		AddMinutes(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddMinutes(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
 }
@@ -177,8 +187,9 @@ func TestAddMilliseconds(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddMilliseconds(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
-			t.Errorf("AddMilliseconds() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		AddMilliseconds(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddMilliseconds(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
 }
@@ -222,8 +233,9 @@ func TestAddMonths(t *testing.T) {
 	}
 
 	t.Run("does not mutate original date", func(t *testing.T) {
-		if got := AddMonths(testDate, 0); !reflect.DeepEqual(got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
-			t.Errorf("AddMonths() = %v, want %v", got, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		AddMonths(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddMonths(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
 		}
 	})
 }
@@ -388,6 +400,13 @@ func TestStartOfDay(t *testing.T) {
 			}
 		})
 	}
+	testDate := time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC)
+	t.Run("does not mutate original date", func(t *testing.T) {
+		StartOfDay(testDate)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC)) {
+			t.Errorf("StartOfDay(testDate) = %v, want %v", testDate, time.Date(1991, 9, 26, 1, 0, 0, 0, time.UTC))
+		}
+	})
 }
 
 func TestEndOfDay(t *testing.T) {
@@ -414,4 +433,44 @@ func TestEndOfDay(t *testing.T) {
 			}
 		})
 	}
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	t.Run("does not mutate original date", func(t *testing.T) {
+		EndOfDay(testDate)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("EndOfDay(testDate) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
+}
+
+func TestStartOfMonth(t *testing.T) {
+	tests := []struct {
+		name string
+		date time.Time
+		want time.Time
+	}{
+		{
+			"returns the date with the time set to 00:00:00 and the date set to the first day of a month",
+			time.Date(2024, 7, 5, 12, 0, 0, 0, time.UTC),
+			time.Date(2024, 7, 1, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			"keeps the original time zone",
+			time.Date(2024, 7, 5, 23, 59, 59, 123456789, time.FixedZone("EST", -5*3600)),
+			time.Date(2024, 7, 1, 0, 0, 0, 0, time.FixedZone("EST", -5*3600)),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := StartOfMonth(tt.date); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StartOfMonth() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	t.Run("does not mutate original date", func(t *testing.T) {
+		StartOfMonth(testDate)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("StartOfMonth(testDate) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
 }
