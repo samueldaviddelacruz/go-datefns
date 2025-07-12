@@ -101,6 +101,16 @@ func IsWeekend(dirtyDate time.Time) bool {
 	return dirtyDate.Weekday() == time.Saturday || dirtyDate.Weekday() == time.Sunday
 }
 
+// IsToday Is the given date today?
+func IsToday(dirtyDate time.Time, now time.Time) bool {
+	tyear, tmonth, tday := now.Date()
+	dyear, dmonth, dday := dirtyDate.Date()
+	return tyear == dyear && tmonth == dmonth && tday == dday
+}
+func IsTodayNow(dirtyDate time.Time) bool {
+	return IsToday(dirtyDate, time.Now())
+}
+
 // DifferenceInCalendarDays Get the number of full days between the given dates.
 //
 // A positive value indicates that laterDate is after earlierDate,

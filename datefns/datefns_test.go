@@ -267,6 +267,38 @@ func TestIsWeekend(t *testing.T) {
 	}
 }
 
+func TestIsToday(t *testing.T) {
+	testDate := time.Date(2024, 7, 6, 15, 30, 0, 0, time.UTC)
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		want      bool
+	}{
+		{
+			"same day",
+			time.Date(2024, 7, 6, 0, 0, 0, 0, time.UTC),
+			true,
+		},
+		{
+			"same day with time difference",
+			time.Date(2024, 7, 6, 23, 59, 59, 0, time.UTC),
+			true,
+		},
+		{
+			"different day",
+			time.Date(2024, 7, 5, 23, 59, 59, 0, time.UTC),
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsToday(tt.dirtyDate, testDate); got != tt.want {
+				t.Errorf("IsToday() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestDifferenceInCalendarDays(t *testing.T) {
 	tests := []struct {
 		name    string
