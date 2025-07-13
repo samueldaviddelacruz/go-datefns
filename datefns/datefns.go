@@ -111,6 +111,17 @@ func IsTodayNow(dirtyDate time.Time) bool {
 	return IsToday(dirtyDate, time.Now())
 }
 
+// IsTomorrow Is the given date tomorrow?
+func IsTomorrow(dirtyDate time.Time, now time.Time) bool {
+	tyear, tmonth, tday := AddDays(now, 1).Date()
+	dyear, dmonth, dday := dirtyDate.Date()
+	return tyear == dyear && tmonth == dmonth && tday == dday
+}
+
+func IsTomorrowNow(dirtyDate time.Time) bool {
+	return IsTomorrow(dirtyDate, time.Now())
+}
+
 // DifferenceInCalendarDays Get the number of full days between the given dates.
 //
 // A positive value indicates that laterDate is after earlierDate,

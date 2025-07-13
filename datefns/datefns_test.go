@@ -299,6 +299,38 @@ func TestIsToday(t *testing.T) {
 	}
 }
 
+func TestIsTomorrow(t *testing.T) {
+	testDate := time.Date(2024, 7, 6, 15, 30, 0, 0, time.UTC)
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		want      bool
+	}{
+		{
+			"is tomorrow",
+			time.Date(2024, 7, 7, 0, 0, 0, 0, time.UTC),
+			true,
+		},
+		{
+			"tomorrow with time difference",
+			time.Date(2024, 7, 7, 23, 59, 59, 0, time.UTC),
+			true,
+		},
+		{
+			"after tomorrow",
+			time.Date(2024, 7, 8, 23, 59, 59, 0, time.UTC),
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsTomorrow(tt.dirtyDate, testDate); got != tt.want {
+				t.Errorf("IsTomorrow() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestDifferenceInCalendarDays(t *testing.T) {
 	tests := []struct {
 		name    string
