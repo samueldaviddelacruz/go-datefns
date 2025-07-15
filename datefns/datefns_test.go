@@ -362,6 +362,38 @@ func TestIsPast(t *testing.T) {
 		})
 	}
 }
+
+func TestIsFuture(t *testing.T) {
+	testDate := time.Date(2024, 7, 7, 15, 30, 0, 0, time.UTC)
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		want      bool
+	}{
+		{
+			"is in the future",
+			time.Date(2024, 7, 8, 0, 0, 0, 0, time.UTC),
+			true,
+		},
+		{
+			"is in the future time difference",
+			time.Date(2024, 7, 8, 23, 59, 59, 0, time.UTC),
+			true,
+		},
+		{
+			"not in the future",
+			time.Date(2024, 7, 6, 23, 59, 59, 0, time.UTC),
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsFuture(tt.dirtyDate, testDate); got != tt.want {
+				t.Errorf("IsFuture() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 func TestDifferenceInCalendarDays(t *testing.T) {
 	tests := []struct {
 		name    string

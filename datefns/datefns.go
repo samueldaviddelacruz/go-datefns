@@ -126,8 +126,16 @@ func IsTomorrowNow(dirtyDate time.Time) bool {
 func IsPast(dirtyDate time.Time, now time.Time) bool {
 	return dirtyDate.Before(now)
 }
-func IsIsPastNow(dirtyDate time.Time) bool {
+func IsPastNow(dirtyDate time.Time) bool {
 	return dirtyDate.Before(time.Now())
+}
+
+// IsFuture Is the given date in the future?
+func IsFuture(dirtyDate time.Time, now time.Time) bool {
+	return now.Before(dirtyDate)
+}
+func IsFutureNow(dirtyDate time.Time) bool {
+	return time.Now().Before(dirtyDate)
 }
 
 // DifferenceInCalendarDays Get the number of full days between the given dates.
