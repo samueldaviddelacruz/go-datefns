@@ -394,6 +394,35 @@ func TestIsFuture(t *testing.T) {
 		})
 	}
 }
+
+func TestIsSameDay(t *testing.T) {
+	tests := []struct {
+		name    string
+		later   time.Time
+		earlier time.Time
+		want    bool
+	}{
+		{
+			name:    "the given dates have the same day",
+			later:   time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC),
+			earlier: time.Date(2012, 7, 2, 6, 0, 0, 0, time.UTC),
+			want:    true,
+		},
+		{
+			name:    "the given dates have different days",
+			later:   time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC),
+			earlier: time.Date(2012, 7, 8, 6, 0, 0, 0, time.UTC),
+			want:    false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsSameDay(tt.later, tt.earlier); got != tt.want {
+				t.Errorf("IsSameDay() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 func TestDifferenceInCalendarDays(t *testing.T) {
 	tests := []struct {
 		name    string

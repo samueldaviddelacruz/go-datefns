@@ -138,6 +138,11 @@ func IsFutureNow(dirtyDate time.Time) bool {
 	return time.Now().Before(dirtyDate)
 }
 
+// IsSameDay Are the given dates in the same day (and year and month)?
+func IsSameDay(laterDate time.Time, earlierDate time.Time) bool {
+	return StartOfDay(laterDate).Equal(StartOfDay(earlierDate))
+}
+
 // DifferenceInCalendarDays Get the number of full days between the given dates.
 //
 // A positive value indicates that laterDate is after earlierDate,
