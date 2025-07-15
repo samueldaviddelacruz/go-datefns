@@ -143,9 +143,14 @@ func IsSameDay(laterDate time.Time, earlierDate time.Time) bool {
 	return StartOfDay(laterDate).Equal(StartOfDay(earlierDate))
 }
 
-// IsSameMonth Are the given dates in the same month (and year and day)?
+// IsSameMonth Are the given dates in the same month (and year)?
 func IsSameMonth(laterDate time.Time, earlierDate time.Time) bool {
-	return StartOfDay(StartOfMonth(laterDate)).Equal(StartOfDay(StartOfMonth(earlierDate)))
+	return laterDate.Year() == earlierDate.Year() && laterDate.Month() == earlierDate.Month()
+}
+
+// IsSameYear Are the given dates in the same year?
+func IsSameYear(laterDate time.Time, earlierDate time.Time) bool {
+	return laterDate.Year() == earlierDate.Year()
 }
 
 // DifferenceInCalendarDays Get the number of full days between the given dates.

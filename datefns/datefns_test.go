@@ -451,6 +451,34 @@ func TestIsSameMonth(t *testing.T) {
 		})
 	}
 }
+func TestIsSameYear(t *testing.T) {
+	tests := []struct {
+		name    string
+		later   time.Time
+		earlier time.Time
+		want    bool
+	}{
+		{
+			name:    "the given dates have the same year",
+			later:   time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC),
+			earlier: time.Date(2012, 7, 2, 6, 0, 0, 0, time.UTC),
+			want:    true,
+		},
+		{
+			name:    "the given dates have different year",
+			later:   time.Date(2012, 7, 2, 18, 0, 0, 0, time.UTC),
+			earlier: time.Date(2011, 8, 8, 6, 0, 0, 0, time.UTC),
+			want:    false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsSameYear(tt.later, tt.earlier); got != tt.want {
+				t.Errorf("IsSameYear() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 func TestDifferenceInCalendarDays(t *testing.T) {
 	tests := []struct {
 		name    string
