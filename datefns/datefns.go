@@ -96,6 +96,16 @@ func AddMonths(dirtyDate time.Time, amount int) time.Time {
 	return time.Date(targetDate.Year(), targetDate.Month(), day, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), dirtyDate.Location())
 }
 
+// AddYears Add the specified number of years to the given date.
+func AddYears(dirtyDate time.Time, amount int) time.Time {
+	if amount == 0 {
+		// If amount == 0, no-op
+		return dirtyDate.Add(0)
+	}
+	aYearInMonths := amount * 12
+	return AddMonths(dirtyDate, aYearInMonths)
+}
+
 // IsWeekend Does the given date fall on a weekend? A weekend is either Saturday or Sunday
 func IsWeekend(dirtyDate time.Time) bool {
 	return dirtyDate.Weekday() == time.Saturday || dirtyDate.Weekday() == time.Sunday

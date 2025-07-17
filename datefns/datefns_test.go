@@ -122,6 +122,49 @@ func TestAddHours(t *testing.T) {
 	})
 }
 
+func TestAddYears(t *testing.T) {
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
+		{
+			name:      "adds the given number of years",
+			dirtyDate: testDate,
+			amount:    1,
+			want:      time.Date(1992, 9, 26, 0, 0, 0, 0, time.UTC),
+		}, {
+			name:      "handles the leap years properly",
+			dirtyDate: time.Date(2016, 2, 29, 0, 0, 0, 0, time.UTC),
+			amount:    1,
+			want:      time.Date(2017, 2, 28, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:      "handles dates before 100 AD",
+			dirtyDate: time.Date(0, 2, 29, 0, 0, 0, 0, time.UTC),
+			amount:    1,
+			want:      time.Date(1, 2, 28, 0, 0, 0, 0, time.UTC),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := AddYears(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("AddYears() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	t.Run("does not mutate original date", func(t *testing.T) {
+		AddYears(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("AddYears(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
+}
+
 func TestAddMinutes(t *testing.T) {
 
 	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
