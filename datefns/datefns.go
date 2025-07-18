@@ -101,6 +101,11 @@ func AddMonths(dirtyDate time.Time, amount int) time.Time {
 	return time.Date(targetDate.Year(), targetDate.Month(), day, dirtyDate.Hour(), dirtyDate.Minute(), dirtyDate.Second(), dirtyDate.Nanosecond(), dirtyDate.Location())
 }
 
+// SubMonths Substract the specified number of months to the given date.
+func SubMonths(dirtyDate time.Time, amount int) time.Time {
+	return AddMonths(dirtyDate, amount*-1)
+}
+
 // AddYears Add the specified number of years to the given date.
 func AddYears(dirtyDate time.Time, amount int) time.Time {
 	if amount == 0 {
