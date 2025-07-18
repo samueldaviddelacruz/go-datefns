@@ -50,6 +50,11 @@ func AddDays(dirtyDate time.Time, amount int) time.Time {
 	return dirtyDate.AddDate(0, 0, amount)
 }
 
+// SubDays Substract the specified number of days to the given date.
+func SubDays(dirtyDate time.Time, amount int) time.Time {
+	return AddDays(dirtyDate, amount*-1)
+}
+
 // AddBusinessDays Add the specified number of business days (mon - fri) to the given date, ignoring weekends.
 func AddBusinessDays(dirtyDate time.Time, amount int) time.Time {
 	if amount < 0 {

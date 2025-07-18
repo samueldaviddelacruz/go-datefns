@@ -44,7 +44,37 @@ func TestAddDays(t *testing.T) {
 	})
 
 }
+func TestSubDays(t *testing.T) {
+	testDate := time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)
+	tests := []struct {
+		name      string
+		dirtyDate time.Time
+		amount    int
+		want      time.Time
+	}{
+		{
+			name:      "subtracts the given number of days",
+			dirtyDate: testDate, amount: 1,
+			want: time.Date(1991, 9, 25, 0, 0, 0, 0, time.UTC),
+		},
+	}
 
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SubDays(tt.dirtyDate, tt.amount); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SubDays() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	t.Run("does not mutate original date", func(t *testing.T) {
+		SubDays(testDate, 1)
+		if !reflect.DeepEqual(testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC)) {
+			t.Errorf("SubDays(testDate, 1) = %v, want %v", testDate, time.Date(1991, 9, 26, 0, 0, 0, 0, time.UTC))
+		}
+	})
+
+}
 func TestAddBusinessDays(t *testing.T) {
 
 	tests := []struct {
