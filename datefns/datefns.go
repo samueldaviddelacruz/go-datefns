@@ -116,6 +116,11 @@ func AddYears(dirtyDate time.Time, amount int) time.Time {
 	return AddMonths(dirtyDate, aYearInMonths)
 }
 
+// SubYears Substract the specified number of years to the given date.
+func SubYears(dirtyDate time.Time, amount int) time.Time {
+	return AddYears(dirtyDate, amount*-1)
+}
+
 // IsWeekend Does the given date fall on a weekend? A weekend is either Saturday or Sunday
 func IsWeekend(dirtyDate time.Time) bool {
 	return dirtyDate.Weekday() == time.Saturday || dirtyDate.Weekday() == time.Sunday
